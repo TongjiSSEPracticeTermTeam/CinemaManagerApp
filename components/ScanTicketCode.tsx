@@ -18,7 +18,7 @@ export default function ({navigation}: {navigation: NavigationProp<any>}){
 
     return (
         <QRCodeScanner onRead={onSuccess}
-                       flashMode={RNCamera.Constants.FlashMode.torch}
+                       flashMode={RNCamera.Constants.FlashMode.off}
                        topContent={
                             <Text variant="headlineMedium">扫描客户的取票码</Text>
                        }

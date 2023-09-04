@@ -22,7 +22,6 @@ export default function ({navigation}: {navigation: NavigationProp<any>}) {
 
     useEffect(()=>{
         let form = new FormData()
-        console.log(content)
         form.append("code", content)
 
         axios
@@ -59,7 +58,7 @@ export default function ({navigation}: {navigation: NavigationProp<any>}) {
             </View>
         ):(
             <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-                <Image source={require('../assets/check.png')} style={{width:256,height:256}}/>
+                <Image source={require('../assets/check.png')} style={{width:128,height:128}}/>
                 <View style={{marginTop:25}}>
                     <Text variant="titleLarge">取票成功！</Text>
                 </View>
