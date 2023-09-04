@@ -5,34 +5,35 @@ import * as React from "react";
 import {useEffect, useState} from "react";
 import axios from "axios";
 import {useStoreState} from "../store";
-import {LoginResponse} from "../dto/LoginResponse";
-import storage from "../storage";
 
-export default function ({navigation}: {navigation: NavigationProp<any>}) {
+export default function ({navigation}: { navigation: NavigationProp<any> }) {
     const route = useRoute<RouteProp<{
-        VT:{
+        VT: {
             content: string
         }
     }, 'VT'>>();
 
     const {content} = route.params
 
-    const [loading,setLoading] = useState(true)
+    const [loading, setLoading] = useState(true)
     const token = useStoreState(state => state.token);
 
-    useEffect(()=>{
+    useEffect(() => {
         let form = new FormData()
         form.append("code", content)
 
         axios
             .post('https://cinema.cinea.com.cn/api/Ticket/getTicket', form, {
-                headers: {Authorization: `Bearer ${token}`},
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'multipart/form-data'
+                },
             })
             .then(res => {
                 if (res.data && res.data.status && res.data.status === '10000') {
                     setLoading(false);
                 } else {
-                    Alert.alert('取票失败', `${res.data.message}`,undefined,{
+                    Alert.alert('取票失败', `${res.data.message}`, undefined, {
                         onDismiss: () => {
                             navigation.goBack()
                         }
@@ -40,30 +41,31 @@ export default function ({navigation}: {navigation: NavigationProp<any>}) {
                 }
             })
             .catch((err) => {
-                Alert.alert('取票失败', err.toString(),undefined,{
+                console.log(JSON.stringify(err))
+                Alert.alert('取票失败', err.toString(), undefined, {
                     onDismiss: () => {
                         navigation.goBack()
                     }
                 });
             });
-    },[])
+    }, [])
 
     return (
-        loading?(
+        loading ? (
             <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
                 <ActivityIndicator size="large"/>
-                <View style={{marginTop:25}}>
+                <View style={{marginTop: 25}}>
                     <Text variant="titleLarge">正在验票……</Text>
                 </View>
             </View>
-        ):(
+        ) : (
             <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-                <Image source={require('../assets/check.png')} style={{width:128,height:128}}/>
-                <View style={{marginTop:25}}>
+                <Image source={require('../assets/check.png')} style={{width: 128, height: 128}}/>
+                <View style={{marginTop: 25}}>
                     <Text variant="titleLarge">取票成功！</Text>
                 </View>
-                <View style={{marginTop:25}}>
-                    <Button onPress={()=>navigation.goBack()}>返回</Button>
+                <View style={{marginTop: 25}}>
+                    <Button onPress={() => navigation.goBack()}>返回</Button>
                 </View>
             </View>
         )
